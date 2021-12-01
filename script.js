@@ -21,13 +21,13 @@ const renderCountry = function (data, className = '') {
       </div>
     </article>`;
   countriesContainer.insertAdjacentHTML('beforeend', html);
-  countriesContainer.style.opacity = 1;
+  // countriesContainer.style.opacity = 1;
 };
 
 // Redner error function
 const renderError = function (msg) {
   countriesContainer.insertAdjacentText('beforeend', msg);
-  countriesContainer.style.opacity = 1;
+  // countriesContainer.style.opacity = 1;
 };
 
 // Promise
@@ -44,7 +44,8 @@ const getCountryNeighbor = function (country, className = '') {
     .catch(err => {
       console.error(`${err} 😡😡😡`);
       renderError(`Something went wrong 😡😡😡 ${err.message}. Try again! 🤗`);
-    });
+    })
+    .finally(() => (countriesContainer.style.opacity = 1));
 };
 
 btn.addEventListener('click', () => getCountryNeighbor('norway'));
