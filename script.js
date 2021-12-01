@@ -26,14 +26,20 @@ const renderCountry = function (data, className = '') {
 };
 
 // Promise
-const getCountryData = function (country) {
+
+const getCountryNeighbor = function (country, className = '') {
   fetch(`https://restcountries.com/v2/name/${country}`)
     .then(response => response.json())
-    .then(data => renderCountry(data[0]));
+    .then(data => {
+      renderCountry(data[0]);
+      const neighbor = data[0].borders[0];
+      return fetch(`https://restcountries.com/v2/alpha/${neighbor}`);
+    })
+    .then(response => response.json())
+    .then(data => renderCountry(data, 'neighbour'));
 };
 
-getCountryData('norway');
-
+getCountryNeighbor('norway');
 // const getCountryNeighbor = function (country) {
 //   // AJAX call country 1
 //   const request = new XMLHttpRequest();
