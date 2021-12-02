@@ -27,42 +27,49 @@ const renderCountry = function (data, className = '') {
 // Redner error function
 const renderError = function (msg) {
   countriesContainer.insertAdjacentText('beforeend', msg);
-  // countriesContainer.style.opacity = 1;
+  countriesContainer.style.opacity = 1;
+};
+
+// fetch url, throwing error function
+const getJson = function (url, msg = 'Something went wrong') {
+  return fetch(url).then(response => {
+    if (!response.ok) throw new Error(`${msg} ${response.status}`);
+    return response.json();
+  });
 };
 
 // Promise
-const getCountryNeighbor = function (country, className = '') {
-  fetch(`https://restcountries.com/v2/name/${country}`)
-    .then(response => {
-      console.log(response);
-
-      // if (!response.ok) {
-      //   throw new Error(`Country not found ${response.status}`);
-      // }
-      return response.json();
-    })
+const getCountryNeighbor = function (country) {
+  // country 1
+  const url = `https://restcountries.com/v2/name/${country}`;
+  getJson(url, 'Country cannout found')
     .then(data => {
       renderCountry(data[0]);
-      // const neighbor = data[0].borders[0];
-      const neighbor = 'dfdfdfdf';
-      return fetch(`https://restcountries.com/v2/alpha/${neighbor}`);
-    })
-    .then(response => {
-      if (!response.ok) {
-        throw new Error(`Country not found ${response.status}`);
+      const neighbor = data[0].borders[0];
+
+      if (!neighbor) {
+        throw new Error('No neighbor found');
       }
-      return response.json();
+      // const neighbor = 'dfdfdfdf';
+
+      // Country 2
+      return getJson(
+        `https://restcountries.com/v2/alpha/${neighbor}`,
+        'Country cannot found'
+      );
     })
     .then(data => renderCountry(data, 'neighbour'))
     .catch(err => {
-      console.error(`${err} 😡😡😡`);
+      // console.error(`${err} 😡😡😡`);
       renderError(`Something went wrong 😡😡😡 ${err.message}. Try again! 🤗`);
     })
     .finally(() => (countriesContainer.style.opacity = 1));
 };
 
-btn.addEventListener('click', () => getCountryNeighbor('norway'));
-getCountryNeighbor('koreaaa');
+btn.addEventListener('click', function () {
+  getCountryNeighbor('norway');
+});
+getCountryNeighbor('australia');
 
 // const getCountryNeighbor = function (country) {
 //   // AJAX call country 1
