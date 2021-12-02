@@ -21,7 +21,7 @@ const renderCountry = function (data, className = '') {
       </div>
     </article>`;
   countriesContainer.insertAdjacentHTML('beforeend', html);
-  // countriesContainer.style.opacity = 1;
+  countriesContainer.style.opacity = 1;
 };
 
 // Redner error function
@@ -67,9 +67,9 @@ const getCountryNeighbor = function (country) {
 };
 
 btn.addEventListener('click', function () {
-  getCountryNeighbor('norway');
+  getCountryNeighbor('dfdgffhfh');
 });
-getCountryNeighbor('australia');
+// getCountryNeighbor('australia');
 
 // const getCountryNeighbor = function (country) {
 //   // AJAX call country 1
