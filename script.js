@@ -33,13 +33,26 @@ const renderError = function (msg) {
 // Promise
 const getCountryNeighbor = function (country, className = '') {
   fetch(`https://restcountries.com/v2/name/${country}`)
-    .then(response => response.json())
+    .then(response => {
+      console.log(response);
+
+      // if (!response.ok) {
+      //   throw new Error(`Country not found ${response.status}`);
+      // }
+      return response.json();
+    })
     .then(data => {
       renderCountry(data[0]);
-      const neighbor = data[0].borders[0];
+      // const neighbor = data[0].borders[0];
+      const neighbor = 'dfdfdfdf';
       return fetch(`https://restcountries.com/v2/alpha/${neighbor}`);
     })
-    .then(response => response.json())
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`Country not found ${response.status}`);
+      }
+      return response.json();
+    })
     .then(data => renderCountry(data, 'neighbour'))
     .catch(err => {
       console.error(`${err} 😡😡😡`);
@@ -49,6 +62,7 @@ const getCountryNeighbor = function (country, className = '') {
 };
 
 btn.addEventListener('click', () => getCountryNeighbor('norway'));
+getCountryNeighbor('koreaaa');
 
 // const getCountryNeighbor = function (country) {
 //   // AJAX call country 1
