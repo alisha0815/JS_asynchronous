@@ -24,6 +24,6 @@ const whereAmI = async function (country) {
   const data = await res.json();
   console.log(data[0]);
 };
-
+//test
 whereAmI('norway');
 console.log('First');
