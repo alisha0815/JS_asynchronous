@@ -19,6 +19,14 @@ const renderError = function (msg) {
   countriesContainer.style.opacity = 1;
 };
 
+// fetch url, throwing error function
+const getJson = function (url, msg = 'Something went wrong') {
+  return fetch(url).then(response => {
+    if (!response.ok) throw new Error(`${msg} ${response.status}`);
+    return response.json();
+  });
+};
+
 // render country data
 const renderCountry = function (data, className = '') {
   const html = `
@@ -77,24 +85,24 @@ const whereAmI = async function () {
   }
 };
 //testdf
-console.log('1: I will get location');
-// const city = whereAmI();
-// console.log(city);
-// whereAmI()
-//   .then(city => console.log(`🤑2: ${city}`))
-//   .catch(err => console.err(`🤑${err.message}`))
-//   .finally(() => console.log('3: Finished getting location'));
+// console.log('1: I will get location');
+// // const city = whereAmI();
+// // console.log(city);
+// // whereAmI()
+// //   .then(city => console.log(`🤑2: ${city}`))
+// //   .catch(err => console.err(`🤑${err.message}`))
+// //   .finally(() => console.log('3: Finished getting location'));
 
-// IIFF
-(async function () {
-  try {
-    const city = await whereAmI();
-    console.log(`🤑2: ${city}`);
-  } catch (err) {
-    console.error(`🤑${err.message}`);
-  }
-  console.log('3: Finished getting location');
-})();
+// // IIFF
+// (async function () {
+//   try {
+//     const city = await whereAmI();
+//     console.log(`🤑2: ${city}`);
+//   } catch (err) {
+//     console.error(`🤑${err.message}`);
+//   }
+//   console.log('3: Finished getting location');
+// })();
 // console.log('3: Finished getting location');
 
 // try...catch
@@ -105,3 +113,27 @@ console.log('1: I will get location');
 // } catch (err) {
 //   console.error(err.message);
 // }
+
+// Running promises in parallel
+const get3Countries = async function (c1, c2, c3) {
+  try {
+    // const [data1] = await getJson(`https://restcountries.com/v2/name/${c1}`);
+    // console.log(data1);
+    // const [data2] = await getJson(`https://restcountries.com/v2/name/${c2}`);
+    // const [data3] = await getJson(`https://restcountries.com/v2/name/${c3}`);
+
+    // console.log([data1.capital, data2.capital, data3.capital]);
+
+    const data = await Promise.all([
+      getJson(`https://restcountries.com/v2/name/${c1}`),
+      getJson(`https://restcountries.com/v2/name/${c2}`),
+      getJson(`https://restcountries.com/v2/name/${c3}`),
+    ]);
+
+    console.log(data.map(d => d[0].capital));
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+get3Countries('norway', 'canada', 'portugal');
