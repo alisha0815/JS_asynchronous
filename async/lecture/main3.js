@@ -13,6 +13,12 @@ const getPosition = function () {
   });
 };
 
+// Redner error function
+const renderError = function (msg) {
+  countriesContainer.insertAdjacentText('beforeend', msg);
+  countriesContainer.style.opacity = 1;
+};
+
 // render country data
 const renderCountry = function (data, className = '') {
   const html = `
@@ -33,27 +39,51 @@ const renderCountry = function (data, className = '') {
 };
 
 //async
-const whereAmI = async function (country) {
-  // Geolocation
-  const pos = await getPosition();
-  // console.log(pos);
-  const { latitude: lat, longitude: lng } = pos.coords;
+const whereAmI = async function () {
+  try {
+    // Geolocation
+    const pos = await getPosition();
+    // console.log(pos);
+    const { latitude: lat, longitude: lng } = pos.coords;
 
-  // Reverse geocoding
-  const resGeo = await fetch(
-    `https://geocode.xyz/${lat},${lng}?geoit=json&auth=598189113573160559385x123274`
-  );
-  const dataGeo = await resGeo.json();
-  console.log(dataGeo);
+    // Reverse geocoding
+    const resGeo = await fetch(
+      `https://geocode.xyz/${lat},${lng}?geoit=json&auth=598189113573160559385x123274`
+    );
+    // error handling
+    if (!resGeo.ok) throw new Error('Problem getting location data');
 
-  //country data
-  const res = await fetch(
-    `https://restcountries.com/v2/name/${dataGeo.country}`
-  );
-  const data = await res.json();
-  console.log(data[0]);
-  renderCountry(data[0]);
+    const dataGeo = await resGeo.json();
+    console.log(dataGeo);
+
+    //country data
+    const res = await fetch(
+      `https://restcountries.com/v2/name/${dataGeo.country}`
+    );
+    // error handling
+    if (!res.ok) throw new Error('Problem getting country');
+
+    const data = await res.json();
+    console.log(data[0]);
+    renderCountry(data[0]);
+  } catch (err) {
+    console.error(`${err} 🥵`);
+    renderError(`😈 ${err.message}`);
+  }
 };
 //testdf
-whereAmI('norway');
+whereAmI();
+whereAmI();
+whereAmI();
+whereAmI();
+whereAmI();
 console.log('First');
+
+// try...catch
+// try {
+//   let y = 1;
+//   const x = 2;
+//   x = 3;
+// } catch (err) {
+//   console.error(err.message);
+// }
