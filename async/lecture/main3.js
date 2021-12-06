@@ -1,4 +1,8 @@
 'use strict';
+
+const btn = document.querySelector('.btn-country');
+const countriesContainer = document.querySelector('.countries');
+
 // render country data
 const renderCountry = function (data, className = '') {
   const html = `
@@ -23,6 +27,7 @@ const whereAmI = async function (country) {
   const res = await fetch(`https://restcountries.com/v2/name/${country}`);
   const data = await res.json();
   console.log(data[0]);
+  renderCountry(data[0]);
 };
 //testdf
 whereAmI('norway');
