@@ -137,3 +137,53 @@ const get3Countries = async function (c1, c2, c3) {
 };
 
 get3Countries('norway', 'canada', 'portugal');
+
+// Promise race (the first wins)
+(async function () {
+  const res = await Promise.race([
+    getJson(`https://restcountries.com/v2/name/sweden`),
+    getJson(`https://restcountries.com/v2/name/ireland`),
+    getJson(`https://restcountries.com/v2/name/spain`),
+  ]);
+  console.log(res[0]);
+})();
+
+// reject
+const timeout = function (sec) {
+  return new Promise(function (_, reject) {
+    setTimeout(function () {
+      reject(new Error('request took too long'));
+    }, sec * 1000);
+  });
+};
+
+Promise.race([getJson(`https://restcountries.com/v2/name/korea`), timeout(0.3)])
+  .then(res => console.log(res[0]))
+  .catch(err => console.error(err));
+
+// Promise.allSettled
+// return an array of all the settled promises
+Promise.allSettled([
+  Promise.resolve('Success'),
+  Promise.reject('ERROR'),
+  Promise.resolve('Another success'),
+]).then(res => console.log(res));
+
+// Promise.all
+Promise.all([
+  Promise.resolve('Success'),
+  Promise.reject('ERROR'),
+  Promise.resolve('Another success'),
+])
+  .then(res => console.log(res))
+  .catch(err => console.error(err));
+
+// Promise.any [ES2021]
+// the first promise but the rejected promises are ignored
+Promise.any([
+  Promise.resolve('Success'),
+  Promise.reject('ERROR'),
+  Promise.resolve('Another success'),
+])
+  .then(res => console.log(res))
+  .catch(err => console.error(err));
