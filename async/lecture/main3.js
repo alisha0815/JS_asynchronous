@@ -80,10 +80,21 @@ const whereAmI = async function () {
 console.log('1: I will get location');
 // const city = whereAmI();
 // console.log(city);
-whereAmI()
-  .then(city => console.log(`🤑2: ${city}`))
-  .catch(err => console.err(`🤑${err.message}`))
-  .finally(() => console.log('3: Finished getting location'));
+// whereAmI()
+//   .then(city => console.log(`🤑2: ${city}`))
+//   .catch(err => console.err(`🤑${err.message}`))
+//   .finally(() => console.log('3: Finished getting location'));
+
+// IIFF
+(async function () {
+  try {
+    const city = await whereAmI();
+    console.log(`🤑2: ${city}`);
+  } catch (err) {
+    console.error(`🤑${err.message}`);
+  }
+  console.log('3: Finished getting location');
+})();
 // console.log('3: Finished getting location');
 
 // try...catch
