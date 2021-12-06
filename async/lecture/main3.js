@@ -3,6 +3,16 @@
 const btn = document.querySelector('.btn-country');
 const countriesContainer = document.querySelector('.countries');
 
+//get position
+const getPosition = function () {
+  return new Promise((resolve, reject) => {
+    navigator.geolocation.getCurrentPosition(
+      position => resolve(position),
+      err => reject(err)
+    );
+  });
+};
+
 // render country data
 const renderCountry = function (data, className = '') {
   const html = `
@@ -24,7 +34,22 @@ const renderCountry = function (data, className = '') {
 
 //async
 const whereAmI = async function (country) {
-  const res = await fetch(`https://restcountries.com/v2/name/${country}`);
+  // Geolocation
+  const pos = await getPosition();
+  // console.log(pos);
+  const { latitude: lat, longitude: lng } = pos.coords;
+
+  // Reverse geocoding
+  const resGeo = await fetch(
+    `https://geocode.xyz/${lat},${lng}?geoit=json&auth=598189113573160559385x123274`
+  );
+  const dataGeo = await resGeo.json();
+  console.log(dataGeo);
+
+  //country data
+  const res = await fetch(
+    `https://restcountries.com/v2/name/${dataGeo.country}`
+  );
   const data = await res.json();
   console.log(data[0]);
   renderCountry(data[0]);
